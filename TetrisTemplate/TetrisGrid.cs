@@ -12,6 +12,9 @@ class TetrisGrid
     /// The position at which this TetrisGrid should be drawn.
     Vector2 position;
 
+    ///grid-------------->?
+    bool[,] blockGrid;
+
     /// The number of grid elements in the x-direction.
     public int Width { get { return 10; } }
    
@@ -27,6 +30,15 @@ class TetrisGrid
         emptyCell = TetrisGame.ContentManager.Load<Texture2D>("block");
         position = Vector2.Zero;
         Clear();
+        blockGrid = new bool[Width, Height];
+
+        for (int i = 0; i < Width; i++)
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                blockGrid[i, j] = false;
+            }
+        }
     }
 
     /// <summary>
@@ -36,6 +48,13 @@ class TetrisGrid
     /// <param name="spriteBatch">The SpriteBatch used for drawing sprites and text.</param>
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
+        for (int i = 0; i < Width; i++)
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                spriteBatch.Draw(emptyCell, new Vector2(i * emptyCell.Width, j * emptyCell.Height), Color.White);
+            }
+        }
     }
 
     /// <summary>
