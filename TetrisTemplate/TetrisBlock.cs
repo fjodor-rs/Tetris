@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 
 class TetrisBlock
 {
     public enum Block {I, J, L, S, Z, T, O};
-    bool[,] shape;
+    bool[,] shape, rotatedShape;
     Block block;
+    Vector2 position;
 
     public TetrisBlock(Block b)
     {
         block = b;
         shape = new bool[4, 4];
+        rotatedShape = new bool[4, 4];
         SetShape();
+        position = new Vector2(3, 0);
         
     }
 
@@ -27,6 +31,7 @@ class TetrisBlock
             for (int j = 0; j < 4; j++)
             {
                 shape[i, j] = false;
+                rotatedShape[i, j] = false;
             }
         }
 
@@ -79,5 +84,22 @@ class TetrisBlock
 
     }
 
+    public void Rotate() //clockwise atm
+    {
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                rotatedShape[(3 - y), x] = shape[x, y];
+            }
+        }
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                shape[x, y] = rotatedShape[x, y];
+            }
+        }
+    }
 }
 

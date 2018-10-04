@@ -38,6 +38,8 @@ class GameWorld
     /// </summary>
     TetrisGrid grid;
 
+    TetrisBlock tetrisBlock;
+
     public GameWorld()
     {
         random = new Random();
@@ -50,6 +52,10 @@ class GameWorld
 
     public void HandleInput(GameTime gameTime, InputHelper inputHelper)
     {
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
+        {
+
+        }
     }
 
     public void Update(GameTime gameTime)
