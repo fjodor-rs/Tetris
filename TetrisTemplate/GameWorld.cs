@@ -39,6 +39,8 @@ class GameWorld
     TetrisGrid grid;
 
     TetrisBlock tetrisBlock;
+    TetrisBlock.Block blockType;
+    Color blockColor;
 
     public GameWorld()
     {
@@ -48,13 +50,72 @@ class GameWorld
         font = TetrisGame.ContentManager.Load<SpriteFont>("SpelFont");
 
         grid = new TetrisGrid();
+        CreateBlock();
+    }
+
+    public void CreateBlock()
+    {
+        switch (Random.Next(7))
+        {
+            case 0:
+                blockType = TetrisBlock.Block.I;
+                blockColor = Color.Aqua;
+                break;
+            case 1:
+                blockType = TetrisBlock.Block.J;
+                blockColor = Color.Gold;
+                break;
+            case 2:
+                blockType = TetrisBlock.Block.L;
+                blockColor = Color.Brown;
+                break;
+            case 3:
+                blockType = TetrisBlock.Block.O;
+                blockColor = Color.Coral;
+                break;
+            case 4:
+                blockType = TetrisBlock.Block.S;
+                blockColor = Color.Crimson;
+                break;
+            case 5:
+                blockType = TetrisBlock.Block.Z;
+                blockColor = Color.DeepPink;
+                break;
+            case 6:
+                blockType = TetrisBlock.Block.T;
+                blockColor = Color.ForestGreen;
+                break;
+        }
+
+        tetrisBlock = new TetrisBlock(blockType, blockColor);
+
     }
 
     public void HandleInput(GameTime gameTime, InputHelper inputHelper)
     {
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
         {
+            tetrisBlock.Position -= new Vector2(1, 0);
+        }
 
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
+        {
+            tetrisBlock.Position += new Vector2(1, 0);
+        }
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
+        {
+            tetrisBlock.Position += new Vector2(0, 1);
+        }
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
+        {
+            tetrisBlock.Rotate();
+        }
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
+        {
+            CreateBlock();
         }
     }
 
@@ -66,6 +127,7 @@ class GameWorld
     {
         spriteBatch.Begin();
         grid.Draw(gameTime, spriteBatch);
+        tetrisBlock.Draw(gameTime, spriteBatch);
         spriteBatch.End();
     }
 
