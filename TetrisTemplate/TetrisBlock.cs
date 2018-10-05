@@ -87,7 +87,6 @@ class TetrisBlock
                 shape[2, 2] = true;
                 break;
         }
-
     }
 
     public void Rotate() //clockwise atm
@@ -96,7 +95,7 @@ class TetrisBlock
         {
             for (int y = 0; y < 4; y++)
             {
-				rotatedShape[(3 - y), x] = shape[x, y];
+				rotatedShape[3 - y, x] = shape[x, y];
             }
         }
         for (int x = 0; x < 4; x++)
@@ -113,7 +112,7 @@ class TetrisBlock
 
 	}
 
-    public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+	public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         for (int x = 0; x < 4; x++)
         {
