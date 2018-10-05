@@ -12,11 +12,11 @@ class TetrisBlock
     public enum Block { I, J, L, S, Z, T, O };
     bool[,] shape, rotatedShape;
     Block block;
-    Vector2 position;
+    Point position;
     Texture2D emptyCell;
     Color color;
 
-    public Vector2 Position { get { return position; } set { position = value; } }
+    public Point Position { get { return position; } set { position = value; } }
 
     public TetrisBlock(Block b, Color c)
     {
@@ -25,7 +25,7 @@ class TetrisBlock
         shape = new bool[4, 4];
         rotatedShape = new bool[4, 4];
         SetShape();
-        position = new Vector2(3, 0);
+        position = new Point(3, 0);
         
     }
 
@@ -97,10 +97,9 @@ class TetrisBlock
         {
             for (int y = 0; y < 4; y++)
             {
-                rotatedShape[(3 - y), x] = shape[x, y];
+				rotatedShape[(3 - y), x] = shape[x, y];
             }
         }
-
         for (int x = 0; x < 4; x++)
         {
             for (int y = 0; y < 4; y++)

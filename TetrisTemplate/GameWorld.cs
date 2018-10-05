@@ -95,17 +95,17 @@ class GameWorld
     {
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
         {
-            tetrisBlock.Position -= new Vector2(1, 0);
+            tetrisBlock.Position -= new Point(1, 0);
         }
 
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
         {
-            tetrisBlock.Position += new Vector2(1, 0);
+            tetrisBlock.Position += new Point(1, 0);
         }
 
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
         {
-            tetrisBlock.Position += new Vector2(0, 1);
+            tetrisBlock.Position += new Point(0, 1);
         }
 
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
