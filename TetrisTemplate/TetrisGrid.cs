@@ -13,7 +13,7 @@ class TetrisGrid
     Vector2 position;
 
     ///grid-------------->?
-    bool[,] blockGrid;
+    Color[,] blockGrid;
 
     /// The number of grid elements in the x-direction.
     public int Width { get { return 10; } }
@@ -30,8 +30,15 @@ class TetrisGrid
         emptyCell = TetrisGame.ContentManager.Load<Texture2D>("block");
         position = Vector2.Zero;
         Clear();
-        blockGrid = new bool[Width, Height];
+        blockGrid = new Color[Width, Height];
 
+        for (int i = 0; i < Width; i++)
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                blockGrid[i, j] = Color.White;
+            }
+        }
     }
 
     /// <summary>
@@ -53,6 +60,7 @@ class TetrisGrid
     /// <summary>
     /// Clears the grid.
     /// </summary>
+	/// 
     public void Clear()
     {
     }

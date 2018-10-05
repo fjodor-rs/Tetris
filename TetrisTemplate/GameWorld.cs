@@ -63,11 +63,11 @@ class GameWorld
                 break;
             case 1:
                 blockType = TetrisBlock.Block.J;
-                blockColor = Color.Gold;
+                blockColor = Color.YellowGreen;
                 break;
             case 2:
                 blockType = TetrisBlock.Block.L;
-                blockColor = Color.Brown;
+                blockColor = Color.RoyalBlue;
                 break;
             case 3:
                 blockType = TetrisBlock.Block.O;

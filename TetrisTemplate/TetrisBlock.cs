@@ -41,10 +41,9 @@ class TetrisBlock
                 rotatedShape[i, j] = false;
             }
         }
-
         //ieder apart block
         switch (block)
-        {
+        {			
             case Block.I:
                 shape[1, 0] = true;
                 shape[1, 1] = true;
@@ -88,7 +87,6 @@ class TetrisBlock
                 shape[2, 2] = true;
                 break;
         }
-
     }
 
     public void Rotate() //clockwise atm
@@ -97,7 +95,7 @@ class TetrisBlock
         {
             for (int y = 0; y < 4; y++)
             {
-				rotatedShape[(3 - y), x] = shape[x, y];
+				rotatedShape[3 - y, x] = shape[x, y];
             }
         }
         for (int x = 0; x < 4; x++)
@@ -109,7 +107,12 @@ class TetrisBlock
         }
     }
 
-    public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+	public void Collision()
+	{
+
+	}
+
+	public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         for (int x = 0; x < 4; x++)
         {
@@ -119,7 +122,12 @@ class TetrisBlock
                 {
                     spriteBatch.Draw(emptyCell, new Vector2((position.X + x) * emptyCell.Width, (position.Y + y) * emptyCell.Height), color);
                 }
-            }
+
+				if (shape[x, y])
+				{
+					spriteBatch.Draw(emptyCell, new Vector2(400 + x * emptyCell.Width, 400 + y * emptyCell.Height), color);
+				}
+			}
         }
     }
 }
