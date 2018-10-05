@@ -32,13 +32,6 @@ class TetrisGrid
         Clear();
         blockGrid = new bool[Width, Height];
 
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
-            {
-                blockGrid[i, j] = false;
-            }
-        }
     }
 
     /// <summary>
