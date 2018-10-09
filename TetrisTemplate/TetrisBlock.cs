@@ -107,9 +107,24 @@ class TetrisBlock
         }
     }
 
-	public void Collision()
+	public bool Collision(int direction)
 	{
-
+		for (int x = 0; x < 4; x++)
+		{
+			for (int y = 0; y < 4; y++)
+			{
+				if (shape[x, y])
+				{
+					if (position.X + x + direction >= 10 && direction == 1)
+						return true;
+					if (position.Y + y + 1 >= 20 && direction == 0)
+						return true;
+					if (position.X + x + direction < 0 && direction == -1)
+						return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -117,12 +132,11 @@ class TetrisBlock
         for (int x = 0; x < 4; x++)
         {
             for (int y = 0; y < 4; y++)
-            {
-                if (shape[x,y])
+			{
+				if (shape[x,y])
                 {
                     spriteBatch.Draw(emptyCell, new Vector2((position.X + x) * emptyCell.Width, (position.Y + y) * emptyCell.Height), color);
                 }
-
 				if (shape[x, y])
 				{
 					spriteBatch.Draw(emptyCell, new Vector2(400 + x * emptyCell.Width, 400 + y * emptyCell.Height), color);
@@ -131,4 +145,3 @@ class TetrisBlock
         }
     }
 }
-
