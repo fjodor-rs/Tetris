@@ -93,21 +93,24 @@ class GameWorld
 
     public void HandleInput(GameTime gameTime, InputHelper inputHelper)
     {
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
-        {
-            tetrisBlock.Position -= new Point(1, 0);
-        }
 
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
-        {
-            tetrisBlock.Position += new Point(1, 0);
-        }
+		if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
+		{
+			if (!tetrisBlock.Collision(-1))
+				tetrisBlock.Position -= new Point(1, 0);
+		}
 
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
-        {
-            tetrisBlock.Position += new Point(0, 1);
-        }
+		if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
+		{
+			if(!tetrisBlock.Collision(1))
+				tetrisBlock.Position += new Point(1, 0);
+		}
 
+		if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
+		{
+			if(!tetrisBlock.Collision(0))
+				tetrisBlock.Position += new Point(0, 1);
+		}
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
         {
             tetrisBlock.Rotate();
