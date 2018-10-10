@@ -18,6 +18,8 @@ class GameWorld
     }
 
     public static int score = 0;
+    public static int rowsToGo = 20;
+    public static int level = 1;
 
     /// <summary>
     /// The random-number generator of the game.
@@ -39,18 +41,21 @@ class GameWorld
     /// The main grid of the game.
     /// </summary>
     TetrisGrid grid;
+    TetrisGame game;
 
     TetrisBlock tetrisBlock, drawBlock;
     int nextBlock, currentBlock, dropSpeed, previousTime;
     TetrisBlock.Block blockType;
     Color blockColor;
 
-    public GameWorld()
+    public GameWorld(TetrisGame game)
     {
+        this.game = game;
         random = new Random();
         gameState = GameState.Playing;
         font = TetrisGame.ContentManager.Load<SpriteFont>("SpelFont");
         grid = new TetrisGrid();
+        nextBlock = Random.Next(7);
         ResetBlock();
         dropSpeed = 1000;
         previousTime = 0;
@@ -108,6 +113,8 @@ class GameWorld
         tetrisBlock.Position += new Point(0, 1);
         if (tetrisBlock.BottomBounds())
         {
+            //if (tetrisBlock.Position == new Point(3,0))
+                //Game over
             tetrisBlock.Position += new Point(0, -1);
             tetrisBlock.BlockToGrid();
             ResetBlock();
@@ -136,8 +143,16 @@ class GameWorld
 		if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
 		{
             MoveDown();
+            score += 1;
         }
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.R))
+            Reset();
+
+            if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
+            game.Quit();
+
+            if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
         {
             tetrisBlock.Rotate();
             if (tetrisBlock.BottomBounds())
@@ -169,6 +184,14 @@ class GameWorld
         {
             MoveDown();
         }
+        
+        if (rowsToGo <= 0)
+        {
+            level += 1;
+            rowsToGo += 20;
+            if (dropSpeed > 400)
+                dropSpeed -= 100;
+        }
     }
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -177,12 +200,16 @@ class GameWorld
         grid.Draw(gameTime, spriteBatch);
         tetrisBlock.Draw(gameTime, spriteBatch);
         drawBlock.Draw(gameTime, spriteBatch);
-        spriteBatch.DrawString(font, "Score = " + score, new Vector2(400, 400), Color.Black);
+        spriteBatch.DrawString(font, "Score = " + score, new Vector2(400, 275), Color.Black);
+        spriteBatch.DrawString(font, "Rows till next level = " + rowsToGo, new Vector2(400, 250), Color.Black);
+        spriteBatch.DrawString(font, "Level = " + level, new Vector2(400, 300), Color.Black);
         spriteBatch.End();
     }
 
     public void Reset()
     {
+        grid.Clear();
+        score = 0;
     }
 
 }

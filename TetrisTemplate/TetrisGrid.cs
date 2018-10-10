@@ -30,16 +30,8 @@ class TetrisGrid
     {
         emptyCell = TetrisGame.ContentManager.Load<Texture2D>("block");
         position = Vector2.Zero;
-        Clear();
         blockGrid = new Color[Width, Height];
-
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
-            {
-                blockGrid[i, j] = Color.White;
-            }
-        }
+        Clear();
     }
 
     public void LineCheck()
@@ -72,6 +64,7 @@ class TetrisGrid
 
                 j = 20;
                 scoreMod += 0.5f;
+                GameWorld.rowsToGo--;
             }
 
         }
@@ -100,6 +93,13 @@ class TetrisGrid
 	/// 
     public void Clear()
     {
+        for (int i = 0; i < Width; i++)
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                blockGrid[i, j] = Color.White;
+            }
+        }
     }
 }
 

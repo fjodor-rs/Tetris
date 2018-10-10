@@ -27,6 +27,11 @@ class TetrisGame : Game
         game.Run();
     }
 
+    public void Quit()
+    {
+        Exit();
+    }
+
     public TetrisGame()
     {        
         // initialize the graphics device
@@ -52,7 +57,7 @@ class TetrisGame : Game
         spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // create and reset the game world
-        gameWorld = new GameWorld();
+        gameWorld = new GameWorld(this);
         gameWorld.Reset();
     }
 
