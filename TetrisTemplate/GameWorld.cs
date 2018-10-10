@@ -17,6 +17,8 @@ class GameWorld
         GameOver
     }
 
+    public static int score = 0;
+
     /// <summary>
     /// The random-number generator of the game.
     /// </summary>
@@ -47,9 +49,7 @@ class GameWorld
     {
         random = new Random();
         gameState = GameState.Playing;
-
         font = TetrisGame.ContentManager.Load<SpriteFont>("SpelFont");
-
         grid = new TetrisGrid();
         ResetBlock();
         dropSpeed = 1000;
@@ -102,7 +102,7 @@ class GameWorld
         }
     }
 
-    public void MoveDown()
+    void MoveDown()
     {
         previousTime = 0;
         tetrisBlock.Position += new Point(0, 1);
@@ -177,6 +177,7 @@ class GameWorld
         grid.Draw(gameTime, spriteBatch);
         tetrisBlock.Draw(gameTime, spriteBatch);
         drawBlock.Draw(gameTime, spriteBatch);
+        spriteBatch.DrawString(font, "Score = " + score, new Vector2(400, 400), Color.Black);
         spriteBatch.End();
     }
 

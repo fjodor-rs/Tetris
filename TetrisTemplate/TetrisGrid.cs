@@ -45,6 +45,7 @@ class TetrisGrid
     public void LineCheck()
     {
         bool full;
+        float scoreMod = 1;
         for (int j = 19; j > 0; j--)
         {
             full = true;
@@ -59,6 +60,7 @@ class TetrisGrid
 
             if (full)
             {
+                GameWorld.score += (int)(100 * scoreMod);
                 for (int b = j; b > 0; b--)
                 {
                     full = true;
@@ -69,6 +71,7 @@ class TetrisGrid
                 }
 
                 j = 20;
+                scoreMod += 0.5f;
             }
 
         }
