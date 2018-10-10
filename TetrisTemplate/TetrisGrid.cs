@@ -42,7 +42,7 @@ class TetrisGrid
         }
     }
 
-    public void LineCheck()
+    /*public void LineCheck()
     {
         bool full;
         for (int i = 19; i > 0; i--)
@@ -63,6 +63,39 @@ class TetrisGrid
                     }
                 }
             }
+        }
+
+    }*/
+
+    public void LineCheck()
+    {
+        bool full;
+        for (int j = 19; j > 0; j--)
+        {
+            full = true;
+            for (int i = 0; i < 9; i++)
+            {
+                if (blockGrid[i, j] == Color.White)
+                {
+                    full = false;
+                    break;
+                }
+
+                if (full)
+                {
+                    for (int b = j; b > 0; b--)
+                    {
+                        full = true;
+                        for (int a = 0; a < 9; a++)
+                        {
+                            blockGrid[a, b] = blockGrid[a, b - 1];
+                        }
+                    }
+
+                    j--;
+                }
+            }
+
         }
 
     }
