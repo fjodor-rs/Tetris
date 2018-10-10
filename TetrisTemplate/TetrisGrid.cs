@@ -68,7 +68,7 @@ class TetrisGrid
                     }
                 }
 
-                j--;
+                j = 20;
             }
 
         }
