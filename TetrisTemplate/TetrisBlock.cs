@@ -107,8 +107,25 @@ class TetrisBlock
         }
     }
 
-	public void Collision()
+	public void GridBounds()
 	{
+        int leftBound = 3, rightBound = 0, lowerBound = 0;
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                if (shape[x, y])
+                {
+                    if (x < leftBound)
+                        leftBound = x;
+                    if (x > rightBound)
+                        rightBound = x;
+                    if (y > lowerBound)
+                        lowerBound = y;
+                }
+            }
+        }
+        //controleren of een van de bounds buiten de grid gaat
 
 	}
 

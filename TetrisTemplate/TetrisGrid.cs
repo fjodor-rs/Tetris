@@ -12,7 +12,7 @@ class TetrisGrid
     /// The position at which this TetrisGrid should be drawn.
     Vector2 position;
 
-    ///grid-------------->?
+    ///grid-------------->?--------------------------------------------
     Color[,] blockGrid;
 
     /// The number of grid elements in the x-direction.
