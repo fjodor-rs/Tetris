@@ -104,13 +104,14 @@ class GameWorld
 
     public void MoveDown()
     {
-        previousTime -= dropSpeed;
+        previousTime = 0;
         tetrisBlock.Position += new Point(0, 1);
         if (tetrisBlock.BottomBounds())
         {
             tetrisBlock.Position += new Point(0, -1);
             tetrisBlock.BlockToGrid();
             ResetBlock();
+			grid.LineCheck();
         }
     }
 
@@ -152,10 +153,7 @@ class GameWorld
                     else
                         tetrisBlock.Position += new Point(-1, 0);
                 }
-
-            }
-            
-            
+            }     
         }
 
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))

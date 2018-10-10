@@ -44,28 +44,27 @@ class TetrisGrid
 
     public void LineCheck()
     {
-        bool full;
-        for (int i = 19; i > 0; i--)
+        bool full = true;
+
+        for (int j = 0; j < 9; j++)
         {
-            full = true;
-            for (int j = 0; j < 9; j++)
+			if (blockGrid[j, 0] == Color.White)
             {
-                if (blockGrid[j, i] == Color.White)
-                {
-                    full = false;
-                    break;
-                }
-                if (full)
-                {
-                    for (int j = 0; j < 9; j++)
-                    {
-                        blockGrid[j, i] = blockGrid[j, i - 1];
-                    }
-                }
+				full = false;
+                break;
             }
         }
-
-    }
+		if (full)
+		{
+			for (int v = 19; v > 0; v--)
+			{
+				for (int w = 0; w < 9; w++)
+				{
+					blockGrid[w, v] = blockGrid[w, v - 1];
+				}
+			}
+		}
+	}
 
     /// <summary>
     /// Draws the grid on the screen.
