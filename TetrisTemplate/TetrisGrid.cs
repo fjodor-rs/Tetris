@@ -14,6 +14,7 @@ class TetrisGrid
 
     ///grid-------------->?--------------------------------------------
     Color[,] blockGrid;
+    public Color[,] BlockGrid { get { return blockGrid; } set { blockGrid = value; } }
 
     /// The number of grid elements in the x-direction.
     public int Width { get { return 10; } }
@@ -41,6 +42,31 @@ class TetrisGrid
         }
     }
 
+    public void LineCheck()
+    {
+        bool full;
+        for (int i = 19; i > 0; i--)
+        {
+            full = true;
+            for (int j = 0; j < 9; j++)
+            {
+                if (blockGrid[j, i] == Color.White)
+                {
+                    full = false;
+                    break;
+                }
+                if (full)
+                {
+                    for (int j = 0; j < 9; j++)
+                    {
+                        blockGrid[j, i] = blockGrid[j, i - 1];
+                    }
+                }
+            }
+        }
+
+    }
+
     /// <summary>
     /// Draws the grid on the screen.
     /// </summary>
@@ -52,7 +78,7 @@ class TetrisGrid
         {
             for (int j = 0; j < Height; j++)
             {
-                spriteBatch.Draw(emptyCell, new Vector2(i * emptyCell.Width, j * emptyCell.Height), Color.White);
+                spriteBatch.Draw(emptyCell, new Vector2(i * emptyCell.Width, j * emptyCell.Height), blockGrid[i, j]);
             }
         }
     }

@@ -38,7 +38,8 @@ class GameWorld
     /// </summary>
     TetrisGrid grid;
 
-    TetrisBlock tetrisBlock;
+    TetrisBlock tetrisBlock, drawBlock;
+    int nextBlock, currentBlock, dropSpeed, previousTime;
     TetrisBlock.Block blockType;
     Color blockColor;
 
@@ -50,12 +51,25 @@ class GameWorld
         font = TetrisGame.ContentManager.Load<SpriteFont>("SpelFont");
 
         grid = new TetrisGrid();
-        CreateBlock();
+        ResetBlock();
+        dropSpeed = 1000;
+        previousTime = 0;
     }
 
-    public void CreateBlock()
+    public void ResetBlock()
     {
-        switch (Random.Next(7))
+        currentBlock = nextBlock;
+        nextBlock = Random.Next(7);
+        BlockIndex(currentBlock);
+        tetrisBlock = new TetrisBlock(blockType, blockColor, grid);
+        BlockIndex(nextBlock);
+        drawBlock = new TetrisBlock(blockType, blockColor);
+        drawBlock.Position = new Point(13, 5);
+    }
+
+    public void BlockIndex(int block)
+    {
+        switch (block)
         {
             case 0:
                 blockType = TetrisBlock.Block.I;
@@ -63,7 +77,7 @@ class GameWorld
                 break;
             case 1:
                 blockType = TetrisBlock.Block.J;
-                blockColor = Color.YellowGreen;
+                blockColor = Color.Yellow;
                 break;
             case 2:
                 blockType = TetrisBlock.Block.L;
@@ -86,9 +100,18 @@ class GameWorld
                 blockColor = Color.ForestGreen;
                 break;
         }
+    }
 
-        tetrisBlock = new TetrisBlock(blockType, blockColor);
-
+    public void MoveDown()
+    {
+        previousTime -= dropSpeed;
+        tetrisBlock.Position += new Point(0, 1);
+        if (tetrisBlock.BottomBounds())
+        {
+            tetrisBlock.Position += new Point(0, -1);
+            tetrisBlock.BlockToGrid();
+            ResetBlock();
+        }
     }
 
     public void HandleInput(GameTime gameTime, InputHelper inputHelper)
@@ -96,34 +119,58 @@ class GameWorld
 
 		if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
 		{
-			if (!tetrisBlock.Collision(-1))
 				tetrisBlock.Position -= new Point(1, 0);
-		}
+            if (tetrisBlock.SideBounds())
+                tetrisBlock.Position -= new Point(-1, 0);
+
+        }
 
 		if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
 		{
-			if(!tetrisBlock.Collision(1))
 				tetrisBlock.Position += new Point(1, 0);
-		}
+            if (tetrisBlock.SideBounds())
+                tetrisBlock.Position += new Point(-1, 0);
+        }
 
 		if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
 		{
-			if(!tetrisBlock.Collision(0))
-				tetrisBlock.Position += new Point(0, 1);
-		}
+            MoveDown();
+        }
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
         {
             tetrisBlock.Rotate();
+            if (tetrisBlock.BottomBounds())
+            {
+                tetrisBlock.Rotate(false);
+            }
+            else
+            {
+                while (tetrisBlock.SideBounds())
+                {
+                    if (tetrisBlock.Position.X < 5)
+                        tetrisBlock.Position += new Point(1, 0);
+                    else
+                        tetrisBlock.Position += new Point(-1, 0);
+                }
+
+            }
+            
+            
         }
 
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
         {
-            CreateBlock();
+            ResetBlock();
         }
     }
 
     public void Update(GameTime gameTime)
     {
+        previousTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+        if (previousTime >= dropSpeed)
+        {
+            MoveDown();
+        }
     }
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -131,6 +178,7 @@ class GameWorld
         spriteBatch.Begin();
         grid.Draw(gameTime, spriteBatch);
         tetrisBlock.Draw(gameTime, spriteBatch);
+        drawBlock.Draw(gameTime, spriteBatch);
         spriteBatch.End();
     }
 

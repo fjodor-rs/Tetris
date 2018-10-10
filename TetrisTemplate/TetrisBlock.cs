@@ -15,13 +15,15 @@ class TetrisBlock
     Point position;
     Texture2D emptyCell;
     Color color;
+    TetrisGrid grid;
 
     public Point Position { get { return position; } set { position = value; } }
 
-    public TetrisBlock(Block b, Color c)
+    public TetrisBlock(Block b, Color c, TetrisGrid grid = null)
     {
         block = b;
         color = c;
+        this.grid = grid;
         shape = new bool[4, 4];
         rotatedShape = new bool[4, 4];
         SetShape();
@@ -89,25 +91,31 @@ class TetrisBlock
         }
     }
 
-    public void Rotate() //clockwise atm
+    public void Rotate(bool clockwise = true) //clockwise atm
     {
         for (int x = 0; x < 4; x++)
         {
             for (int y = 0; y < 4; y++)
             {
-				rotatedShape[3 - y, x] = shape[x, y];
+                if (clockwise)
+				    rotatedShape[3 - y, x] = shape[x, y];
+                else
+                    rotatedShape[y, 3 - x] = shape[x, y];
             }
         }
         for (int x = 0; x < 4; x++)
         {
             for (int y = 0; y < 4; y++)
             {
+                // shape[] = rotatedShape[]; Deed het niet
                 shape[x, y] = rotatedShape[x, y];
             }
         }
     }
 
-	public bool Collision(int direction)
+    
+
+    public bool SideBounds()
 	{
 		for (int x = 0; x < 4; x++)
 		{
@@ -115,19 +123,52 @@ class TetrisBlock
 			{
 				if (shape[x, y])
 				{
-					if (position.X + x + direction >= 10 && direction == 1)
-						return true;
-					if (position.Y + y + 1 >= 20 && direction == 0)
-						return true;
-					if (position.X + x + direction < 0 && direction == -1)
-						return true;
-				}
+                    if (position.X + x >= 10 || position.X + x < 0)
+                        return true;
+                    else if (grid.BlockGrid[position.X + x, position.Y + y] != Color.White)
+                            return true;
+                }
 			}
 		}
 		return false;
 	}
 
-	public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+    public bool BottomBounds()
+    {
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                if (shape[x, y])
+                {
+                    if (position.Y + y >= 20)
+                        return true;
+                    else if (position.X + x < 10 && position.X + x >= 0)
+                    {
+                        if (grid.BlockGrid[position.X + x, position.Y + y] != Color.White)
+                            return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public void BlockToGrid()
+    {
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                if (shape[x, y])
+                {
+                    grid.BlockGrid[position.X + x, position.Y + y] = color;
+                }
+            }
+        }
+    }
+
+    public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         for (int x = 0; x < 4; x++)
         {
@@ -137,10 +178,6 @@ class TetrisBlock
                 {
                     spriteBatch.Draw(emptyCell, new Vector2((position.X + x) * emptyCell.Width, (position.Y + y) * emptyCell.Height), color);
                 }
-				if (shape[x, y])
-				{
-					spriteBatch.Draw(emptyCell, new Vector2(400 + x * emptyCell.Width, 400 + y * emptyCell.Height), color);
-				}
 			}
         }
     }
