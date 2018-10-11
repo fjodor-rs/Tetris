@@ -13,6 +13,7 @@ class GameWorld
     /// </summary>
     enum GameState
     {
+        Init,
         Playing,
         GameOver
     }
@@ -30,7 +31,7 @@ class GameWorld
     /// <summary>
     /// The main font of the game.
     /// </summary>
-    SpriteFont font;
+    SpriteFont font, menuFont;
 
     /// <summary>
     /// The current game state.
@@ -52,8 +53,9 @@ class GameWorld
     {
         this.game = game;
         random = new Random();
-        gameState = GameState.Playing;
+        gameState = GameState.Init;
         font = TetrisGame.ContentManager.Load<SpriteFont>("SpelFont");
+        menuFont = TetrisGame.ContentManager.Load<SpriteFont>("MenuFont");
         grid = new TetrisGrid();
         nextBlock = Random.Next(7);
         ResetBlock();
@@ -69,7 +71,7 @@ class GameWorld
         tetrisBlock = new TetrisBlock(blockType, blockColor, grid);
         BlockIndex(nextBlock);
         drawBlock = new TetrisBlock(blockType, blockColor);
-        drawBlock.Position = new Point(13, 5);
+        drawBlock.Position = new Point(13, 4);
     }
 
     public void BlockIndex(int block)
@@ -135,7 +137,7 @@ class GameWorld
 
 		if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
 		{
-				tetrisBlock.Position += new Point(1, 0);
+		    tetrisBlock.Position += new Point(1, 0);
             if (tetrisBlock.SideBounds())
                 tetrisBlock.Position += new Point(-1, 0);
         }
@@ -149,10 +151,10 @@ class GameWorld
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.R))
             Reset();
 
-            if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
             game.Quit();
 
-            if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
         {
             tetrisBlock.Rotate();
             if (tetrisBlock.BottomBounds())
@@ -171,10 +173,10 @@ class GameWorld
             }     
         }
 
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
+        /*if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
         {
             ResetBlock();
-        }
+        }*/
     }
 
     public void Update(GameTime gameTime)
@@ -200,6 +202,11 @@ class GameWorld
         grid.Draw(gameTime, spriteBatch);
         tetrisBlock.Draw(gameTime, spriteBatch);
         drawBlock.Draw(gameTime, spriteBatch);
+        if (gameState == GameState.Init)
+        {
+            
+
+        }
         spriteBatch.DrawString(font, "Score = " + score, new Vector2(400, 275), Color.Black);
         spriteBatch.DrawString(font, "Rows till next level = " + rowsToGo, new Vector2(400, 250), Color.Black);
         spriteBatch.DrawString(font, "Level = " + level, new Vector2(400, 300), Color.Black);

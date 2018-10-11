@@ -91,7 +91,8 @@ class TetrisBlock
         }
     }
 
-    public void Rotate(bool clockwise = true) //clockwise atm
+    //true is met de klok mee, false is tegen de klok in
+    public void Rotate(bool clockwise = true)
     {
         for (int x = 0; x < 4; x++)
         {
