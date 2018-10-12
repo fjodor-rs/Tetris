@@ -45,7 +45,7 @@ class GameWorld
     TetrisGame game;
 
     TetrisBlock tetrisBlock, drawBlock;
-    int nextBlock, currentBlock, dropSpeed, previousTime;
+    int nextBlock, currentBlock, dropSpeed, previousTime, delay;
     TetrisBlock.Block blockType;
     Color blockColor;
 	double timePressed;
@@ -146,11 +146,17 @@ class GameWorld
         }
 		if (inputHelper.KeyDown(Microsoft.Xna.Framework.Input.Keys.Down))
 		{
-			timePressed += gameTime.ElapsedGameTime.TotalSeconds;
-			if (timePressed >= 1)
+			timePressed += gameTime.ElapsedGameTime.TotalMilliseconds;
+			delay += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+			if (timePressed >= 300 && delay >= 100)
+			{
 				MoveDown();
+				delay = 0;
+			}
+
 			if (!inputHelper.KeyDown(Microsoft.Xna.Framework.Input.Keys.Down))
 				timePressed = 0;
+			
 		}
 		if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
 		{

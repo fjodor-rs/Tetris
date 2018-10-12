@@ -27,7 +27,7 @@ class TetrisBlock
         shape = new bool[4, 4];
         rotatedShape = new bool[4, 4];
         SetShape();
-        position = new Point(3, -3);
+        position = new Point(3, -1);
         
     }
 
