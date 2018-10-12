@@ -27,7 +27,7 @@ class TetrisBlock
         shape = new bool[4, 4];
         rotatedShape = new bool[4, 4];
         SetShape();
-        position = new Point(3, 0);
+        position = new Point(3, -3);
         
     }
 
@@ -124,10 +124,13 @@ class TetrisBlock
 			{
 				if (shape[x, y])
 				{
-                    if (position.X + x >= 10 || position.X + x < 0)
+                    if (position.Y + y >= 0)
+                    {
+                        if (position.X + x >= 10 || position.X + x < 0)
                         return true;
-                    else if (grid.BlockGrid[position.X + x, position.Y + y] != Color.White)
-                            return true;
+                        else if (grid.BlockGrid[position.X + x, position.Y + y] != Color.White)
+                        return true;
+                    }
                 }
 			}
 		}
@@ -146,7 +149,8 @@ class TetrisBlock
                         return true;
                     else if (position.X + x < 10 && position.X + x >= 0)
                     {
-                        if (grid.BlockGrid[position.X + x, position.Y + y] != Color.White)
+                        if (position.Y + y >= 0)
+                            if (grid.BlockGrid[position.X + x, position.Y + y] != Color.White)
                             return true;
                     }
                 }
@@ -163,7 +167,8 @@ class TetrisBlock
             {
                 if (shape[x, y])
                 {
-                    grid.BlockGrid[position.X + x, position.Y + y] = color;
+                    if (position.Y + y >= 0)
+                        grid.BlockGrid[position.X + x, position.Y + y] = color;
                 }
             }
         }

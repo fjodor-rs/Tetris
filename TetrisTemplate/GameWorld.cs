@@ -172,11 +172,6 @@ class GameWorld
                 }
             }     
         }
-
-        /*if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
-        {
-            ResetBlock();
-        }*/
     }
 
     public void Update(GameTime gameTime)
@@ -217,6 +212,9 @@ class GameWorld
     {
         grid.Clear();
         score = 0;
+        rowsToGo = 20;
+        level = 1;
+        dropSpeed = 1000;
     }
 
 }
