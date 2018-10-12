@@ -43,6 +43,7 @@ class GameWorld
     /// </summary>
     TetrisGrid grid;
     TetrisGame game;
+    Texture2D background;
 
     TetrisBlock tetrisBlock, drawBlock;
     int nextBlock, currentBlock, dropSpeed, previousTime;
@@ -56,6 +57,7 @@ class GameWorld
         gameState = GameState.Init;
         font = TetrisGame.ContentManager.Load<SpriteFont>("SpelFont");
         menuFont = TetrisGame.ContentManager.Load<SpriteFont>("MenuFont");
+        background = TetrisGame.ContentManager.Load<Texture2D>("TETRIS");
         grid = new TetrisGrid();
         nextBlock = Random.Next(7);
         ResetBlock();
@@ -154,6 +156,10 @@ class GameWorld
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
             game.Quit();
 
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
+            if (gameState == GameState.Init)
+                gameState = GameState.Playing;
+
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
         {
             tetrisBlock.Rotate();
@@ -176,35 +182,44 @@ class GameWorld
 
     public void Update(GameTime gameTime)
     {
-        previousTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
-        if (previousTime >= dropSpeed)
+        if (gameState == GameState.Playing)
         {
-            MoveDown();
+            previousTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (previousTime >= dropSpeed)
+            {
+                MoveDown();
+            }
+
+            if (rowsToGo <= 0)
+            {
+                level += 1;
+                rowsToGo += 20;
+                if (dropSpeed > 400)
+                    dropSpeed -= 100;
+            }
         }
         
-        if (rowsToGo <= 0)
-        {
-            level += 1;
-            rowsToGo += 20;
-            if (dropSpeed > 400)
-                dropSpeed -= 100;
-        }
     }
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         spriteBatch.Begin();
-        grid.Draw(gameTime, spriteBatch);
-        tetrisBlock.Draw(gameTime, spriteBatch);
-        drawBlock.Draw(gameTime, spriteBatch);
-        if (gameState == GameState.Init)
+
+        if (gameState == GameState.Playing)
         {
-            
+            grid.Draw(gameTime, spriteBatch);
+            tetrisBlock.Draw(gameTime, spriteBatch);
+            drawBlock.Draw(gameTime, spriteBatch);
+            spriteBatch.DrawString(font, "Score = " + score, new Vector2(400, 275), Color.Black);
+            spriteBatch.DrawString(font, "Rows till next level = " + rowsToGo, new Vector2(400, 250), Color.Black);
+            spriteBatch.DrawString(font, "Level = " + level, new Vector2(400, 300), Color.Black);
 
         }
-        spriteBatch.DrawString(font, "Score = " + score, new Vector2(400, 275), Color.Black);
-        spriteBatch.DrawString(font, "Rows till next level = " + rowsToGo, new Vector2(400, 250), Color.Black);
-        spriteBatch.DrawString(font, "Level = " + level, new Vector2(400, 300), Color.Black);
+        else if (gameState == GameState.Init)
+        {
+            spriteBatch.Draw(background, Vector2.Zero, Color.White);
+
+        }
         spriteBatch.End();
     }
 
