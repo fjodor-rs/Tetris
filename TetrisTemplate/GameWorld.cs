@@ -46,9 +46,10 @@ class GameWorld
     Texture2D background;
 
     TetrisBlock tetrisBlock, drawBlock;
-    int nextBlock, currentBlock, dropSpeed, previousTime;
+    int nextBlock, currentBlock, dropSpeed, previousTime, delay;
     TetrisBlock.Block blockType;
     Color blockColor;
+	double timePressed;
 
     public GameWorld(TetrisGame game)
     {
@@ -63,6 +64,7 @@ class GameWorld
         ResetBlock();
         dropSpeed = 1000;
         previousTime = 0;
+		timePressed = 0;
     }
 
     public void ResetBlock()
@@ -74,6 +76,7 @@ class GameWorld
         BlockIndex(nextBlock);
         drawBlock = new TetrisBlock(blockType, blockColor);
         drawBlock.Position = new Point(13, 4);
+		timePressed = 0;
     }
 
     public void BlockIndex(int block)
@@ -143,7 +146,20 @@ class GameWorld
             if (tetrisBlock.SideBounds())
                 tetrisBlock.Position += new Point(-1, 0);
         }
+		if (inputHelper.KeyDown(Microsoft.Xna.Framework.Input.Keys.Down))
+		{
+			timePressed += gameTime.ElapsedGameTime.TotalMilliseconds;
+			delay += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+			if (timePressed >= 300 && delay >= 100)
+			{
+				MoveDown();
+				delay = 0;
+			}
 
+			if (!inputHelper.KeyDown(Microsoft.Xna.Framework.Input.Keys.Down))
+				timePressed = 0;
+			
+		}
 		if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
 		{
             MoveDown();
