@@ -222,6 +222,9 @@ class GameWorld
     {
         grid.Clear();
         score = 0;
+        rowsToGo = 20;
+        level = 1;
+        dropSpeed = 1000;
     }
 
 }
