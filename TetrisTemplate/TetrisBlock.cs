@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 class TetrisBlock
 {
-    public enum Block { I, J, L, S, Z, T, O };
+    public enum Block { I, J, L, S, Z, T, O , Rod, Cup, Mill };
     bool[,] shape, rotatedShape;
     Block block;
     Point position;
@@ -87,6 +87,34 @@ class TetrisBlock
                 shape[1, 2] = true;
                 shape[2, 1] = true;
                 shape[2, 2] = true;
+                break;
+            case Block.Rod:
+                shape[1, 1] = true;
+                shape[1, 2] = true;
+                shape[2, 1] = true;
+                shape[2, 2] = true;
+                shape[1, 0] = true;
+                shape[3, 2] = true;
+                shape[2, 3] = true;
+                shape[0, 1] = true;
+                break;
+            case Block.Cup:
+                shape[0, 2] = true;
+                shape[0, 1] = true;
+                shape[1, 2] = true;
+                shape[2, 2] = true;
+                shape[3, 1] = true;
+                shape[3, 2] = true;
+                break;
+            case Block.Mill:
+                shape[1, 1] = true;
+                shape[1, 2] = true;
+                shape[2, 1] = true;
+                shape[2, 2] = true;
+                shape[1, 0] = true;
+                shape[3, 1] = true;
+                shape[2, 3] = true;
+                shape[0, 2] = true;
                 break;
         }
     }

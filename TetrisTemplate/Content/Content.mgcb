@@ -39,6 +39,18 @@
 /processorParam:TextureFormat=Compressed
 /build:MenuFont.spritefont
 
+#begin Hardtheme.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Hardtheme.mp3
+
+#begin Normaltheme.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Normaltheme.mp3
+
 #begin TETRIS.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -50,4 +62,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TETRIS.jpg
+
+#begin Gameover.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Gameover.png
 
