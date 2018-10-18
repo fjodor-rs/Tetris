@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
-
+using Microsoft.Xna.Framework.Audio;
 using System;
 
 /// <summary>
@@ -56,6 +56,7 @@ class GameWorld
     Texture2D background, emptyCell, endScreen;
     Vector2 mousePos;
     Song normalTheme, hardTheme;
+    static SoundEffect nock, rowDel, lvlUp;
 
     TetrisBlock tetrisBlock, drawBlock;
     int nextBlock, currentBlock, dropSpeed, previousTime, delay, nrBlocks;
@@ -75,6 +76,9 @@ class GameWorld
         emptyCell = TetrisGame.ContentManager.Load<Texture2D>("block");
         normalTheme = TetrisGame.ContentManager.Load<Song>("Normaltheme");
         hardTheme = TetrisGame.ContentManager.Load<Song>("Hardtheme");
+        nock = TetrisGame.ContentManager.Load<SoundEffect>("nock");
+        rowDel = TetrisGame.ContentManager.Load<SoundEffect>("rowDel");
+        lvlUp = TetrisGame.ContentManager.Load<SoundEffect>("lvlUp");
         MediaPlayer.IsRepeating = true;
         grid = new TetrisGrid();
         nrBlocks = 7;
@@ -156,7 +160,13 @@ class GameWorld
             tetrisBlock.BlockToGrid();
             ResetBlock();
 			grid.LineCheck();
+            nock.Play();
         }
+    }
+
+    public static void RowDelSound()
+    {
+        rowDel.Play();
     }
 
     public void HandleInput(GameTime gameTime, InputHelper inputHelper)
@@ -287,6 +297,7 @@ class GameWorld
             {
                 level += 1;
                 rowsToGo += 20;
+                lvlUp.Play();
                 if (dropSpeed > 400)
                     dropSpeed -= 100;
             }

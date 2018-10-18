@@ -75,3 +75,21 @@
 /processorParam:TextureFormat=Color
 /build:Gameover.png
 
+#begin rowDel.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:rowDel.mp3
+
+#begin nock.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:nock.mp3
+
+#begin lvlUp.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:lvlUp.mp3
+
