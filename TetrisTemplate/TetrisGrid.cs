@@ -65,6 +65,7 @@ class TetrisGrid
                 j = 20;
                 scoreMod += 0.5f;
                 GameWorld.rowsToGo--;
+                GameWorld.RowDelSound();
             }
 
         }

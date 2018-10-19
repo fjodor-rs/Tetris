@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 using System;
 
 /// <summary>
@@ -18,11 +19,13 @@ class GameWorld
         Playing,
         GameOver
     }
-	enum GameType
-	{
-		Normal,
-		Hard
-	}
+
+    enum GameType
+    {
+        Normal,
+        Hard
+    }
+
     public static int score = 0;
     public static int rowsToGo = 20;
     public static int level = 1;
@@ -45,15 +48,20 @@ class GameWorld
 	GameType gameType;
 	
 
+    GameType gameType;
+
     /// <summary>
     /// The main grid of the game.
     /// </summary>
     TetrisGrid grid;
     TetrisGame game;
-    Texture2D background;
+    Texture2D background, emptyCell, endScreen;
+    Vector2 mousePos;
+    Song normalTheme, hardTheme;
+    static SoundEffect nock, rowDel, lvlUp;
 
     TetrisBlock tetrisBlock, drawBlock;
-    int nextBlock, currentBlock, dropSpeed, previousTime, delay;
+    int nextBlock, currentBlock, dropSpeed, previousTime, delay, nrBlocks;
     TetrisBlock.Block blockType;
     Color blockColor;
 	double timePressed;
@@ -66,8 +74,17 @@ class GameWorld
         font = TetrisGame.ContentManager.Load<SpriteFont>("SpelFont");
         menuFont = TetrisGame.ContentManager.Load<SpriteFont>("MenuFont");
         background = TetrisGame.ContentManager.Load<Texture2D>("TETRIS");
+        endScreen = TetrisGame.ContentManager.Load<Texture2D>("Gameover");
+        emptyCell = TetrisGame.ContentManager.Load<Texture2D>("block");
+        normalTheme = TetrisGame.ContentManager.Load<Song>("Normaltheme");
+        hardTheme = TetrisGame.ContentManager.Load<Song>("Hardtheme");
+        nock = TetrisGame.ContentManager.Load<SoundEffect>("nock");
+        rowDel = TetrisGame.ContentManager.Load<SoundEffect>("rowDel");
+        lvlUp = TetrisGame.ContentManager.Load<SoundEffect>("lvlUp");
+        MediaPlayer.IsRepeating = true;
         grid = new TetrisGrid();
-        nextBlock = Random.Next(7);
+        nrBlocks = 7;
+        nextBlock = Random.Next(nrBlocks);
         ResetBlock();
         dropSpeed = 1000;
         previousTime = 0;
@@ -77,7 +94,7 @@ class GameWorld
     public void ResetBlock()
     {
         currentBlock = nextBlock;
-        nextBlock = Random.Next(7);
+        nextBlock = Random.Next(nrBlocks);
         BlockIndex(currentBlock);
         tetrisBlock = new TetrisBlock(blockType, blockColor, grid);
         BlockIndex(nextBlock);
@@ -118,6 +135,18 @@ class GameWorld
                 blockType = TetrisBlock.Block.T;
                 blockColor = Color.ForestGreen;
                 break;
+            case 7:
+                blockType = TetrisBlock.Block.Rod;
+                blockColor = Color.OrangeRed;
+                break;
+            case 8:
+                blockType = TetrisBlock.Block.Cup;
+                blockColor = Color.MediumPurple;
+                break;
+            case 9:
+                blockType = TetrisBlock.Block.Mill;
+                blockColor = Color.DodgerBlue;
+                break;
         }
     }
 
@@ -127,50 +156,98 @@ class GameWorld
         tetrisBlock.Position += new Point(0, 1);
         if (tetrisBlock.BottomBounds())
         {
-            //if (tetrisBlock.Position == new Point(3,0))
-                //Game over
+            if (tetrisBlock.Position == new Point(3, 0))
+                gameState = GameState.GameOver;
             tetrisBlock.Position += new Point(0, -1);
             tetrisBlock.BlockToGrid();
             ResetBlock();
 			grid.LineCheck();
+            nock.Play();
         }
+    }
+
+    public static void RowDelSound()
+    {
+        rowDel.Play();
     }
 
     public void HandleInput(GameTime gameTime, InputHelper inputHelper)
     {
+        if (gameState == GameState.Playing)
+        {
 
-		if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
-		{
-				tetrisBlock.Position -= new Point(1, 0);
-            if (tetrisBlock.SideBounds())
-                tetrisBlock.Position -= new Point(-1, 0);
+            //Met de klok mee draaien
+            if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.E))
+            {
+                tetrisBlock.Rotate();
+                if (tetrisBlock.BottomBounds())
+                {
+                    tetrisBlock.Rotate(false);
+                }
+                else
+                {
+                    while (tetrisBlock.SideBounds())
+                    {
+                        if (tetrisBlock.Position.X < 5)
+                            tetrisBlock.Position += new Point(1, 0);
+                        else
+                            tetrisBlock.Position += new Point(-1, 0);
+                    }
+                }
+            }
 
-        }
+            //Tegen de klok in draaien
+            if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Q))
+            {
+                tetrisBlock.Rotate(false);
+                if (tetrisBlock.BottomBounds())
+                {
+                    tetrisBlock.Rotate();
+                }
+                else
+                {
+                    while (tetrisBlock.SideBounds())
+                    {
+                        if (tetrisBlock.Position.X < 5)
+                            tetrisBlock.Position += new Point(1, 0);
+                        else
+                            tetrisBlock.Position += new Point(-1, 0);
+                    }
+                }
+            }
 
-		if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
-		{
-		    tetrisBlock.Position += new Point(1, 0);
-            if (tetrisBlock.SideBounds())
-                tetrisBlock.Position += new Point(-1, 0);
-        }
-		if (inputHelper.KeyDown(Microsoft.Xna.Framework.Input.Keys.Down))
-		{
-			timePressed += gameTime.ElapsedGameTime.TotalMilliseconds;
-			delay += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
-			if (timePressed >= 300 && delay >= 100)
-			{
-				MoveDown();
-				delay = 0;
-			}
+            if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
+            {
+                tetrisBlock.Position -= new Point(1, 0);
+                if (tetrisBlock.SideBounds())
+                    tetrisBlock.Position -= new Point(-1, 0);
 
-			if (!inputHelper.KeyDown(Microsoft.Xna.Framework.Input.Keys.Down))
-				timePressed = 0;
-			
-		}
-		if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
-		{
-            MoveDown();
-            score += 1;
+            }
+
+            if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.D))
+            {
+                tetrisBlock.Position += new Point(1, 0);
+                if (tetrisBlock.SideBounds())
+                    tetrisBlock.Position += new Point(-1, 0);
+            }
+            if (inputHelper.KeyDown(Microsoft.Xna.Framework.Input.Keys.S))
+            {
+                timePressed += gameTime.ElapsedGameTime.TotalMilliseconds;
+                delay += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (timePressed >= 300 && delay >= 100)
+                {
+                    MoveDown();
+                    delay = 0;
+                }
+
+                if (!inputHelper.KeyDown(Microsoft.Xna.Framework.Input.Keys.S))
+                    timePressed = 0;
+
+            }
+            if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.S))
+            {
+                MoveDown();
+            }
         }
 
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.R))
@@ -179,27 +256,32 @@ class GameWorld
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
             game.Quit();
 
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
-            if (gameState == GameState.Init)
-                gameState = GameState.Playing;
-
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
+        if (gameState == GameState.Init)
         {
-            tetrisBlock.Rotate();
-            if (tetrisBlock.BottomBounds())
+            mousePos = inputHelper.MousePosition;
+            if (inputHelper.MouseLeftButtonPressed())
             {
-                tetrisBlock.Rotate(false);
-            }
-            else
-            {
-                while (tetrisBlock.SideBounds())
+                gameState = GameState.Playing;
+                if (mousePos.X < TetrisGame.ScreenSize.X / 2)
                 {
-                    if (tetrisBlock.Position.X < 5)
-                        tetrisBlock.Position += new Point(1, 0);
-                    else
-                        tetrisBlock.Position += new Point(-1, 0);
+                    gameType = GameType.Normal;
+                    MediaPlayer.Play(normalTheme);
+                    nrBlocks = 7;
+                    dropSpeed = 1000;
                 }
-            }     
+                else
+                {
+                    gameType = GameType.Hard;
+                    MediaPlayer.Play(hardTheme);
+                    nrBlocks = 10;
+                    dropSpeed = 600;
+
+                }
+
+                //Twee keer ResetBlock om een nieuwe waarde voor block en nextblock te krijgen, die bij de goede gamemode hoort
+                ResetBlock();
+                ResetBlock();
+            }
         }
     }
 
@@ -217,6 +299,7 @@ class GameWorld
             {
                 level += 1;
                 rowsToGo += 20;
+                lvlUp.Play();
                 if (dropSpeed > 400)
                     dropSpeed -= 100;
             }
@@ -243,18 +326,28 @@ class GameWorld
         else if (gameState == GameState.Init)
         {
             spriteBatch.Draw(background, Vector2.Zero, Color.White);
-
+            spriteBatch.Draw(emptyCell, mousePos, Color.Red);
+        }
+        else
+        {
+            spriteBatch.Draw(endScreen, Vector2.Zero, Color.White);
+            spriteBatch.DrawString(menuFont, "Score = " + score, new Vector2(180, 300), Color.Black);
+            spriteBatch.DrawString(menuFont, "Level = " + level, new Vector2(680, 300), Color.Black);
         }
         spriteBatch.End();
     }
 
     public void Reset()
     {
+        gameState = GameState.Init;
         grid.Clear();
         score = 0;
         rowsToGo = 20;
         level = 1;
-        dropSpeed = 1000;
+        if (gameType == GameType.Normal)
+            dropSpeed = 1000;
+        else
+            dropSpeed = 600;
     }
 
 }
