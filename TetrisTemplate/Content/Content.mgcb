@@ -51,3 +51,15 @@
 /processorParam:TextureFormat=Color
 /build:TETRIS.jpg
 
+#begin Original Tetris theme (Tetris Soundtrack).mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Original Tetris theme (Tetris Soundtrack).mp3
+
+#begin Nightcore Tetris.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Nightcore Tetris.mp3
+

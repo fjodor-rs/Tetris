@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using System;
 
 /// <summary>
@@ -17,7 +18,11 @@ class GameWorld
         Playing,
         GameOver
     }
-
+	enum GameType
+	{
+		Normal,
+		Hard
+	}
     public static int score = 0;
     public static int rowsToGo = 20;
     public static int level = 1;
@@ -37,6 +42,8 @@ class GameWorld
     /// The current game state.
     /// </summary>
     GameState gameState;
+	GameType gameType;
+	
 
     /// <summary>
     /// The main grid of the game.
@@ -229,6 +236,8 @@ class GameWorld
             spriteBatch.DrawString(font, "Score = " + score, new Vector2(400, 275), Color.Black);
             spriteBatch.DrawString(font, "Rows till next level = " + rowsToGo, new Vector2(400, 250), Color.Black);
             spriteBatch.DrawString(font, "Level = " + level, new Vector2(400, 300), Color.Black);
+			MediaPlayer.IsRepeating = true;
+			MediaPlayer.Play(TetrisGame.ContentManager.Load<Song>("Nightcore Tetris"));
 
         }
         else if (gameState == GameState.Init)
