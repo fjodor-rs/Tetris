@@ -45,9 +45,8 @@ class GameWorld
     /// The current game state.
     /// </summary>
     GameState gameState;
-
-    GameType gameType;
-
+	GameType gameType;
+	
     /// <summary>
     /// The main grid of the game.
     /// </summary>
@@ -317,6 +316,8 @@ class GameWorld
             spriteBatch.DrawString(font, "Score = " + score, new Vector2(400, 275), Color.Black);
             spriteBatch.DrawString(font, "Rows till next level = " + rowsToGo, new Vector2(400, 250), Color.Black);
             spriteBatch.DrawString(font, "Level = " + level, new Vector2(400, 300), Color.Black);
+			MediaPlayer.IsRepeating = true;
+			MediaPlayer.Play(TetrisGame.ContentManager.Load<Song>("Nightcore Tetris"));
 
         }
         else if (gameState == GameState.Init)
