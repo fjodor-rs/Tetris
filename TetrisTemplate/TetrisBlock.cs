@@ -163,6 +163,21 @@ class TetrisBlock
 		return false;
 	}
 
+    public bool StartCheck()
+    {
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                if (shape[x, y] && grid.BlockGrid[position.X + x, position.Y + y] == Color.White)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public bool BottomBounds()
     {
         for (int x = 0; x < 4; x++)
