@@ -89,6 +89,7 @@ class GameWorld
 		timePressed = 0;
     }
 
+	// Neemt het volgende blokje, zet deze bovenaan de grid en checkt of deze collide.
     public void ResetBlock()
     {
         currentBlock = nextBlock;
@@ -99,8 +100,14 @@ class GameWorld
         drawBlock = new TetrisBlock(blockType, blockColor);
         drawBlock.Position = new Point(13, 4);
 		timePressed = 0;
+		if (tetrisBlock.BottomBounds())
+		{
+			gameOver.Play();
+			gameState = GameState.GameOver;
+		}
     }
 
+	// Geeft het type en kleur van een blokje.
     public void BlockIndex(int block)
     {
         switch (block)
@@ -148,17 +155,13 @@ class GameWorld
         }
     }
 
+	// Beweegt het actieve blokje omlaag en checkt of het collide.
     void MoveDown()
     {
         previousTime = 0;
         tetrisBlock.Position += new Point(0, 1);
         if (tetrisBlock.BottomBounds())
         {
-			if (tetrisBlock.Position == new Point(3, 0))
-			{
-				gameOver.Play();
-				gameState = GameState.GameOver;
-			}
             tetrisBlock.Position += new Point(0, -1);
             tetrisBlock.BlockToGrid();
             ResetBlock();
@@ -167,17 +170,19 @@ class GameWorld
         }
     }
 
+	// Geluid voor als een rij gedelete wordt.
     public static void RowDelSound()
     {
         rowDel.Play();
     }
 
+	// Handelt de input van de speler af.
     public void HandleInput(GameTime gameTime, InputHelper inputHelper)
     {
         if (gameState == GameState.Playing)
         {
 
-            //Met de klok mee draaien
+            // Laath het blokje met de klok mee draaien en controleert daarbij of het een kant of andere blokjes raakt.
             if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.E))
             {
                 tetrisBlock.Rotate();
@@ -197,8 +202,8 @@ class GameWorld
                 }
             }
 
-            //Tegen de klok in draaien
-            if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Q))
+			// Laat het blokje tegen de klok in draaien en controleert daarbij of het een kant of andere blokjes raakt.
+			if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Q))
             {
                 tetrisBlock.Rotate(false);
                 if (tetrisBlock.BottomBounds())
@@ -217,21 +222,31 @@ class GameWorld
                 }
             }
 
+			// Beweegt het blokje naar links.
             if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
             {
                 tetrisBlock.Position -= new Point(1, 0);
                 if (tetrisBlock.SideBounds())
-                    tetrisBlock.Position -= new Point(-1, 0);
+                    tetrisBlock.Position += new Point(1, 0);
 
             }
 
+			// Beweegt het blokje naar rechts.
             if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.D))
             {
                 tetrisBlock.Position += new Point(1, 0);
                 if (tetrisBlock.SideBounds())
-                    tetrisBlock.Position += new Point(-1, 0);
+                    tetrisBlock.Position -= new Point(1, 0);
             }
-            if (inputHelper.KeyDown(Microsoft.Xna.Framework.Input.Keys.S))
+
+			// Beweegt het blokje een stap naar beneden.
+			if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.S))
+			{
+				MoveDown();
+			}
+
+			// Beweegt het blokje in hoger tempo naar beneden als de S key ingedrukt gehouden wordt.
+			if (inputHelper.KeyDown(Microsoft.Xna.Framework.Input.Keys.S))
             {
                 timePressed += gameTime.ElapsedGameTime.TotalMilliseconds;
                 delay += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -240,23 +255,21 @@ class GameWorld
                     MoveDown();
                     delay = 0;
                 }
-
                 if (!inputHelper.KeyDown(Microsoft.Xna.Framework.Input.Keys.S))
                     timePressed = 0;
-
-            }
-            if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.S))
-            {
-                MoveDown();
             }
         }
 
+		// Reset de game naar het menu.
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.R))
             Reset();
 
+		// Sluit het spel af.
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
             game.Quit();
 
+
+		// Laat de speler kiezen tussen hard mode of easy mode in het begin scherm.
         if (gameState == GameState.Init)
         {
             mousePos = inputHelper.MousePosition;
@@ -276,7 +289,6 @@ class GameWorld
                     MediaPlayer.Play(hardTheme);
                     nrBlocks = 10;
                     dropSpeed = 600;
-
                 }
 
                 //Twee keer ResetBlock om een nieuwe waarde voor block en nextblock te krijgen, die bij de goede gamemode hoort
@@ -304,8 +316,7 @@ class GameWorld
                 if (dropSpeed > 400)
                     dropSpeed -= 100;
             }
-        }
-        
+        }    
     }
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -335,6 +346,7 @@ class GameWorld
         spriteBatch.End();
     }
 
+	// Zet de game terug naar de begin staat.
     public void Reset()
     {
         gameState = GameState.Init;

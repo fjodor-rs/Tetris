@@ -34,6 +34,7 @@ class TetrisGrid
         Clear();
     }
 
+	// Checkt of een lijn vol is.
     public void LineCheck()
     {
         bool full;
