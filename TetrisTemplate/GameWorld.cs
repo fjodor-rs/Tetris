@@ -55,7 +55,7 @@ class GameWorld
     Texture2D background, emptyCell, endScreen;
     Vector2 mousePos;
     Song normalTheme, hardTheme;
-    static SoundEffect nock, rowDel, lvlUp;
+    static SoundEffect nock, rowDel, lvlUp, gameOver;
 
     TetrisBlock tetrisBlock, drawBlock;
     int nextBlock, currentBlock, dropSpeed, previousTime, delay, nrBlocks;
@@ -78,6 +78,7 @@ class GameWorld
         nock = TetrisGame.ContentManager.Load<SoundEffect>("nock");
         rowDel = TetrisGame.ContentManager.Load<SoundEffect>("rowDel");
         lvlUp = TetrisGame.ContentManager.Load<SoundEffect>("lvlUp");
+		gameOver = TetrisGame.ContentManager.Load<SoundEffect>("youLose");
         MediaPlayer.IsRepeating = true;
         grid = new TetrisGrid();
         nrBlocks = 7;
@@ -153,8 +154,11 @@ class GameWorld
         tetrisBlock.Position += new Point(0, 1);
         if (tetrisBlock.BottomBounds())
         {
-            if (tetrisBlock.Position == new Point(3, 0))
-                gameState = GameState.GameOver;
+			if (tetrisBlock.Position == new Point(3, 0))
+			{
+				gameOver.Play();
+				gameState = GameState.GameOver;
+			}
             tetrisBlock.Position += new Point(0, -1);
             tetrisBlock.BlockToGrid();
             ResetBlock();
@@ -316,9 +320,6 @@ class GameWorld
             spriteBatch.DrawString(font, "Score = " + score, new Vector2(400, 275), Color.Black);
             spriteBatch.DrawString(font, "Rows till next level = " + rowsToGo, new Vector2(400, 250), Color.Black);
             spriteBatch.DrawString(font, "Level = " + level, new Vector2(400, 300), Color.Black);
-			MediaPlayer.IsRepeating = true;
-			MediaPlayer.Play(TetrisGame.ContentManager.Load<Song>("Nightcore Tetris"));
-
         }
         else if (gameState == GameState.Init)
         {
