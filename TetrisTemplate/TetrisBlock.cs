@@ -33,6 +33,7 @@ class TetrisBlock
     private void SetShape()
     {
         emptyCell = TetrisGame.ContentManager.Load<Texture2D>("block");
+
         // 4x4 grid voor de blokken.
         for (int i = 0; i < 4; i++)
         {
@@ -42,6 +43,7 @@ class TetrisBlock
                 rotatedShape[i, j] = false;
             }
         }
+
         // Ieder mogelijk block voor de shape grid.
         switch (block)
         {			

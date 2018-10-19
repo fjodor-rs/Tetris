@@ -361,5 +361,4 @@ class GameWorld
         else
             dropSpeed = 600;
     }
-
 }
