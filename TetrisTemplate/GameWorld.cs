@@ -52,7 +52,7 @@ class GameWorld
     /// </summary>
     TetrisGrid grid;
     TetrisGame game;
-    Texture2D background, emptyCell, endScreen;
+    Texture2D background, emptyCell, endScreen, controls;
     Vector2 mousePos;
     Song normalTheme, hardTheme;
     static SoundEffect nock, rowDel, lvlUp, gameOver;
@@ -71,6 +71,7 @@ class GameWorld
         font = TetrisGame.ContentManager.Load<SpriteFont>("SpelFont");
         menuFont = TetrisGame.ContentManager.Load<SpriteFont>("MenuFont");
         background = TetrisGame.ContentManager.Load<Texture2D>("TETRIS");
+        controls = TetrisGame.ContentManager.Load<Texture2D>("Controls");
         endScreen = TetrisGame.ContentManager.Load<Texture2D>("Gameover");
         emptyCell = TetrisGame.ContentManager.Load<Texture2D>("block");
         normalTheme = TetrisGame.ContentManager.Load<Song>("Normaltheme");
@@ -98,7 +99,7 @@ class GameWorld
         tetrisBlock = new TetrisBlock(blockType, blockColor, grid);
         BlockIndex(nextBlock);
         drawBlock = new TetrisBlock(blockType, blockColor);
-        drawBlock.Position = new Point(13, 4);
+        drawBlock.Position = new Point(12, 4);
 		timePressed = 0;
 		if (tetrisBlock.BottomBounds())
 		{
@@ -328,9 +329,10 @@ class GameWorld
             grid.Draw(gameTime, spriteBatch);
             tetrisBlock.Draw(gameTime, spriteBatch);
             drawBlock.Draw(gameTime, spriteBatch);
-            spriteBatch.DrawString(font, "Score = " + score, new Vector2(400, 275), Color.Black);
-            spriteBatch.DrawString(font, "Rows till next level = " + rowsToGo, new Vector2(400, 250), Color.Black);
-            spriteBatch.DrawString(font, "Level = " + level, new Vector2(400, 300), Color.Black);
+            spriteBatch.DrawString(font, "Score = " + score, new Vector2(350, 275), Color.Black);
+            spriteBatch.DrawString(font, "Rows till next level = " + rowsToGo, new Vector2(350, 250), Color.Black);
+            spriteBatch.DrawString(font, "Level = " + level, new Vector2(350, 300), Color.Black);
+            spriteBatch.Draw(controls, new Vector2(600, 0), Color.White);
         }
         else if (gameState == GameState.Init)
         {
