@@ -47,9 +47,6 @@ class GameWorld
     GameState gameState;
 	GameType gameType;
 	
-
-    GameType gameType;
-
     /// <summary>
     /// The main grid of the game.
     /// </summary>
